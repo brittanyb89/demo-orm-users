@@ -16,5 +16,5 @@ app.use((_, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.info(`Server listening on port ${PORT}`);
 });
