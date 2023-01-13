@@ -22,15 +22,26 @@ router.post("/", (req, res) => {
     });
 });
 
-router.post("/login", (req, res) => {
-  userController
-    .login(req.body)
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      res.status(401).json({ error: err.message });
-    });
+router.post("/login", async (req, res) => {
+  const foundUser = await userController.show(req.body);
+
+  const isAuth = await foundUser?.isValidPassword(req.body.password);
+
+  if (!isAuth) {
+    res.status(401).json({ error: "Invalid credentials" });
+  }
+
+  res.status(200).json(foundUser);
 });
+
+//   userController
+//     .login(req.body)
+//     .then((user) => {
+//       res.status(200).json(user);
+//     })
+//     .catch((err) => {
+//       res.status(401).json({ error: err.message });
+//     });
+// });
 
 export default router;
