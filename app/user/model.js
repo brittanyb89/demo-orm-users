@@ -53,8 +53,25 @@ await User.sync().catch((err) => {
   process.exit(1);
 });
 
-// Hash password before saving to database
+// Hash password before saving to database without using hooks
+// User.beforeCreate(async (user) => {
+//   const salt = await bcrypt.genSalt(config.saltRounds);
+//   user.password = await bcrypt.hash(user.password, salt);
+// });
+
+// sanitize our emails to lowercase and encrypt passwords inside of a beforeCreate hook and repeat beforeUpdate hook
 User.beforeCreate(async (user) => {
+  user.username = user.username.toLowerCase();
+  user.email = user.email.toLowerCase();
+
+  const salt = await bcrypt.genSalt(config.saltRounds);
+  user.password = await bcrypt.hash(user.password, salt);
+});
+
+User.beforeUpdate(async (user) => {
+  user.username = user.username.toLowerCase();
+  user.email = user.email.toLowerCase();
+
   const salt = await bcrypt.genSalt(config.saltRounds);
   user.password = await bcrypt.hash(user.password, salt);
 });
