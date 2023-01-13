@@ -1,18 +1,17 @@
-// use 'define' to define a model
-
 import { DataTypes } from "sequelize";
 import sequelize from "../conn.js";
 
 const User = sequelize.define(
   "User",
   {
-    // Model attributes are defined here
     username: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         isAlphanumeric: { msg: "Username must be alphanumeric" },
-        notNull: { msg: "Username cannot be null" },
+        notNull: {
+          msg: "Username cannot be null",
+        },
       },
     },
     password: {
@@ -20,20 +19,40 @@ const User = sequelize.define(
       allowNull: false,
       validate: {
         len: {
-          args: [8, 16],
-          msg: "Password must be between 8 and 16 characters",
+          args: [8],
+          msg: "Password must be at least 8 characters long",
         },
-        notNull: { msg: "Password cannot be null" },
+        notNull: {
+          msg: "Password cannot be null",
+        },
       },
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         isEmail: { msg: "Email must be valid" },
-        notNull: { msg: "Email cannot be null" },
+        notNull: {
+          msg: "Email cannot be null",
+        },
       },
     },
   },
-  await sequelize.sync()
+  {
+    timestamps: false,
+    sequelize,
+    underscored: true,
+  }
 );
+
+await User.sync().catch((err) => {
+  console.error(`Error syncing User model/table: ${err.message}`);
+  process.exit(1);
+});
+
+// Hash password before saving to database
+User.beforeCreate(async (user) => {
+
+
+export default User;
