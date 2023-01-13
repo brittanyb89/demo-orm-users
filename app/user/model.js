@@ -67,9 +67,8 @@ User.beforeUpdate(sanitizeUser);
 
 // Attach a custom method to the User model
 // shorten this method to directly return the result of the comparison without using async await
-User.prototype.isValidPassword = async function (password) {
-  const isValid = await bcrypt.compare(password, this.password);
-  return isValid;
+User.prototype.isValidPassword = function (password) {
+  return bcrypt.compare(password, this.password);
 };
 
 export default User;
