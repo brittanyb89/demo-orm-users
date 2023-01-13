@@ -65,4 +65,11 @@ await User.sync().catch((err) => {
 User.beforeCreate(sanitizeUser);
 User.beforeUpdate(sanitizeUser);
 
+// Attach a custom method to the User model
+// shorten this method to directly return the result of the comparison without using async await
+User.prototype.isValidPassword = async function (password) {
+  const isValid = await bcrypt.compare(password, this.password);
+  return isValid;
+};
+
 export default User;

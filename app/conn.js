@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import config from "./config.js";
+console.log(config);
 
 // Create a new Sequelize instance.
 const sequelize = new Sequelize(

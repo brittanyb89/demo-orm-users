@@ -22,4 +22,15 @@ router.post("/", (req, res) => {
     });
 });
 
+router.post("/login", (req, res) => {
+  userController
+    .login(req.body)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      res.status(401).json({ error: err.message });
+    });
+});
+
 export default router;
